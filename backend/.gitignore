@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.log
+
+# Virtual environment
+venv/
+ENV/
+env/
+
+# Django specific
+*.sqlite3
+*.db
+*.bak
+db.sqlite3
+
+# Kolibri logs or runtime data (if extended)
+kolibri*.log
+kolibri*.db
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+*.iml
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.swp
+*.tmp
+
+# Migrations (optional: keep if needed)
+**/migrations/*.pyc
+**/migrations/__pycache__/
+# Uncomment to exclude migrations entirely (not recommended for team projects)
+# **/migrations/
+
+# Media/static (if using)
+media/
+staticfiles/
+
+# Env & secrets
+.env
+*.env
