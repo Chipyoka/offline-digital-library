@@ -1,0 +1,73 @@
+
+/* Base wrapper for notifications */
+.notification-wrapper {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Notification card styling */
+.notification {
+  min-width: 260px;
+  max-width: 360px;
+  padding: 14px 18px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.95rem;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Notification content container */
+.notification-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* Close button */
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: #fff;
+  cursor: pointer;
+  margin-left: 12px;
+}
+
+/* Notification types */
+.notification.success {
+  background-color: var(--green);
+}
+
+.notification.error {
+  background-color: var(--red);
+}
+
+.notification.info {
+  background-color: var(--blue);
+}
+
+.notification.warning {
+  background-color: var(--yellow);
+  color: #333;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

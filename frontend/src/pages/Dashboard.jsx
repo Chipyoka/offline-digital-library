@@ -1,4 +1,6 @@
 import SideMenu from '../components/SideMenu';
+import TopBar from '../components/TopBar';
+
 import useUserStore from '../store/useUserStore';
 
 const Dashboard = () => {
@@ -6,6 +8,7 @@ const Dashboard = () => {
 
     return(
         <>
+            <TopBar/>
            <div className="container">
                 <main className="flex">
                     <div className="h-70">

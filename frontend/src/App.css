@@ -1,10 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
+@import url('./styles/notification.css');
+@import url('./styles/loader.css');
 :root{
   --blue: #3498DB;
   --blue-hover: #2b8ac9;
   --green: #2ECC71;
   --red: #DB4534;
+  --yellow: #FFD883;
   --black: #353535;
   --white: #fff;
   --gray-light: #f2f2f2;
@@ -53,6 +55,53 @@ hr {
   color: var(--white);
 }
 
+.topbar-2{
+  background: var(--blue);
+  padding: 1.5em 2em;
+  color: var(--white);
+
+  display: flex;
+  justify-content: space-between;
+}
+.topbar-2 .btn-y{
+  padding: .5em 1em;
+  background-color: #60bcf9 ;
+  color: var(--white);
+  border: none;
+  border-radius: .25rem;
+
+  font-size: 1.15rem;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+.topbar-2 .btn-y div{
+  width: 12px;
+  height: 12px;
+  padding: .25em;
+  border-radius: 50%;
+  color: var(--red);
+  background: var(--red);
+  margin-inline: .5em;
+  border: thin solid var(--black);
+}
+
+.topbar-2 .btn-x{
+  padding: .5em 2em;
+  background-color: var(--red);
+  color: var(--white);
+  border: 2px solid var(--gray-light);
+  border-radius: .25rem;
+
+  font-size: 1.15rem;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.buttons label{
+  font-size: .75rem;
+}
 /* Utility Classes */
 .text-center{
   text-align: center;
@@ -61,10 +110,18 @@ hr {
   padding: 2em;
 }
 
+.items-center{
+  align-items: center;
+}
+.gap-y-2{
+  column-gap: 2em;
+}
 .h-70{
   height: 70dvh;
 }
-
+.capitalize{
+  text-transform: capitalize;
+}
 .flex{
   display: flex;
 }
