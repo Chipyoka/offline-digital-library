@@ -80,12 +80,21 @@ hr {
   height: 12px;
   padding: .25em;
   border-radius: 50%;
-  color: var(--red);
-  background: var(--red);
   margin-inline: .5em;
   border: thin solid var(--black);
 }
-
+.red{
+  color: var(--red);
+  background: var(--red);
+}
+.green{
+    color: var(--green);
+  background: var(--green);
+}
+.yellow{
+    color: var(--yellow);
+  background: var(--yellow);
+}
 .topbar-2 .btn-x{
   padding: .5em 2em;
   background-color: var(--red);
