@@ -11,8 +11,8 @@ const App = () => {
        <Routes>
          <Route path="/" element={<Login/>}/>
 
-         <Route element={<ProtectedRoute allowedRoles={['admin', 'student']} />}>
-            <Route path="/:mode/dashboard" element={<Dashboard/>}/> 
+         <Route element={<ProtectedRoute allowedRoles={['admin', 'student', 'guest']} />}>
+            <Route path="/:role/dashboard" element={<Dashboard/>}/> 
         </Route>
 
        </Routes>
