@@ -1,13 +1,63 @@
 import Logo from '../assets/zamlib-w.png';
 import {useState} from 'react';
+import {NavLink, useLocation, useNavigate} from 'react-router-dom';
+
+import useUserStore from '../store/useUserStore';
 
 
 
 const Login = () => {
-    const [userMode, setUserMode] = useState('');
+    const [userMode, setUserMode] = useState('guest');
     const [title, setTitle] = useState('Welcome to the');
     const [desc, setDesc] = useState('Continue as');
 
+    const navigate = useNavigate();
+
+    const handleAdminLogin = () => {
+
+        const path = `/${userMode}/dashboard`;
+        navigate(path);
+    }
+
+    const handleStudentLogin = () => {
+        const path = `/${userMode}/dashboard`;
+        navigate(path);
+    }
+
+    const handleRedirect = (e) => {
+        e.preventDefault();
+        if(userMode == 'student'){
+            
+            console.log ("Student login detected");
+            setTimeout(() => {    
+                handleStudentLogin();
+            }, 2000);
+
+        }else if(userMode == 'admin'){
+            console.log ("Admin login detected");
+            setTimeout(() => {    
+                handleAdminLogin();
+            }, 2000);
+        }else{
+            console.log ("Guest mode initiated");
+            
+            setTimeout(() => {    
+                const path = `/guest/dashboard`;
+                navigate(path);
+            }, 2000);
+        }
+
+        // Perform authentication (mocked here)
+        const user = {
+            name: 'John Doe',
+            role: userMode, // or 'user'
+            token: 'abc123'
+        };
+        useUserStore.getState().setUser(user);
+
+        console.log("User:", user);
+    }
+ 
     const handleReset = () => {
         setUserMode(''); 
         setTitle('Welcome to the'); 
@@ -26,11 +76,11 @@ const Login = () => {
                     <p>{desc}</p>
 
                 </div>
-                { !userMode && 
+                { userMode=='guest' && 
                     <div className="container">
                         <div className="btn-box">
                           
-                            <button className="primary-btn-lg-outline">A Guest</button>
+                            <button onClick={handleRedirect}  className="primary-btn-lg-outline">A Guest</button>
                             <button 
                                 onClick={()=> {
                                     setUserMode('student'); 
@@ -70,9 +120,11 @@ const Login = () => {
                             <input type="number" name="student-id" />
                         </div>
 
-                        <button className="primary-btn-lg">
-                            Enter Library
-                        </button>
+                      
+                            <button onClick={handleRedirect} className="primary-btn-lg">
+                                Enter Library
+                            </button>
+                        
 
                         <h4 onClick={handleReset} className="hyperlink">Return to home</h4>
 
@@ -96,9 +148,12 @@ const Login = () => {
                             <input type="password" name="password" />
                         </div>
 
-                        <button className="primary-btn-lg">
-                            Login as admin
-                        </button>
+                            <button 
+                                type="button"
+                                onClick={handleRedirect} 
+                                className="primary-btn-lg">
+                                Login as admin
+                            </button>
 
                         <h4 onClick={handleReset} className="hyperlink">Return to home</h4>
 
