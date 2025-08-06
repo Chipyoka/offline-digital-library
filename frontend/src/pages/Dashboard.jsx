@@ -1,7 +1,21 @@
+import SideMenu from '../components/SideMenu';
+import useUserStore from '../store/useUserStore';
+
 const Dashboard = () => {
+    const user = useUserStore((state) => state.user);
+
     return(
         <>
-            <div> Dashboard</div>
+           <div className="container">
+                <main className="flex">
+                    <div className="h-70">
+                        <SideMenu/>
+                    </div>
+                    <div>
+                        <div className="p-2"> Dashboard [{user?.role ?? 'Unknown'}]</div>
+                    </div>
+                </main>
+           </div>
         </>
     )
 }

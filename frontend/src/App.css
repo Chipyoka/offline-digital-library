@@ -17,8 +17,16 @@
   color: var(--black);
 }
 
+a{
+  text-decoration: none;
+  color: inherit;
+}
+
 p{
   color: #6D6D6D;
+}
+h4{
+  color: var(--black);
 }
 
 *{
@@ -36,7 +44,6 @@ hr {
 }
 
 .login-box{
-  border: thin solid red;
    width: 100%;
 }
 
@@ -50,15 +57,30 @@ hr {
 .text-center{
   text-align: center;
 }
+.p-2{
+  padding: 2em;
+}
+
+.h-70{
+  height: 70dvh;
+}
+
+.flex{
+  display: flex;
+}
 
 .my-1{
   margin-top: 1em;
+  margin-bottom: 1em;
+}
+.mb-2{
   margin-bottom: 1em;
 }
 .my-2{
   margin-top: 2em;
   margin-bottom: 2em;
 }
+
 /* ------------- */
 .primary-btn-lg{
   padding: 1em 2em;
@@ -120,12 +142,11 @@ main{
   height: 75dvh;
   max-height: 75dvh;
 
-  width: 70dvw;
-  max-width: 80dvw;
+  width: 80dvw;
+  max-width: 85dvw;
   margin-top: 2em;
 
   border-radius: .35rem;
-  border: thin pink solid;
 }
 
 .btn-box{
@@ -176,4 +197,39 @@ form{
 
   border: 2px solid var(--gray-md);
   border-radius: .25rem;
+}
+
+.side-menu{
+  border-right: 2px solid var(--gray-light);
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  width: 12dvw;
+  padding: 1em 2em;
+  background: var(--white);
+  height: 100%;
+  max-height: 100%;
+  
+}
+ul{
+  padding: 0em;
+}
+.side-menu ul>li{
+  list-style: none;
+  background: var(--gray-light);
+  padding: .5em 2em;
+  border-radius: .25rem;
+  border: 2px solid var(--gray-light);
+  margin-top: .5em;
+
+  cursor: pointer;
+}
+
+.side-menu ul>li.active {
+  background: var(--blue);
+  color: white;
+}
+
+.side-menu ul>li:hover{
+  border: 2px solid var(--gray-md);
 }

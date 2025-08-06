@@ -59,7 +59,7 @@ const Login = () => {
     }
  
     const handleReset = () => {
-        setUserMode(''); 
+        setUserMode('guest'); 
         setTitle('Welcome to the'); 
         setDesc('Continue as');
     }
