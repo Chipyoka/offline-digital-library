@@ -19,60 +19,110 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const [grade, setGrade] = useState('');
+    const [studentId, setStudentId] = useState('');
+
     const navigate = useNavigate();
 
- const handleAdminLogin = async () => {
-  setLoading(true);
+    const handleAdminLogin = async () => {
+    setLoading(true);
 
-  if (!email || !password) {
-    console.error("Email and password are required for admin login.");
-    return;
-  }
-
-  try {
-    const response = await axios.post(
-      `${API_URL}/login/admin/`,
-      { email, password },
-      {
-        withCredentials: true, // Crucial for session-based auth
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-
-    const data = response.data;
-
-    if (data.user) {
-      const user = {
-        ...data.user,
-        role: 'admin',
-      };
-
-      // Save to Zustand and persist to localStorage/sessionStorage
-      useUserStore.getState().setUser(user);
-      localStorage.setItem('user', JSON.stringify(user)); // Or sessionStorage
-
-      console.log("User logged in:", user);
-
-      const path = `/${userMode}/dashboard`;
-      navigate(path);
-    } else {
-      console.error('Login failed:', data.error || data);
+    if (!email || !password) {
+        console.error("Email and password are required for admin login.");
+        return;
     }
 
-  } catch (error) {
-    console.error("Error during admin login:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+        const response = await axios.post(
+        `${API_URL}/login/admin/`,
+        { email, password },
+        {
+            withCredentials: true, // Crucial for session-based auth
+            headers: {
+            'Content-Type': 'application/json',
+            },
+        }
+        );
 
+        const data = response.data;
 
-    const handleStudentLogin = () => {
+        if (data.user) {
+        const user = {
+            ...data.user,
+            role: 'admin',
+        };
+
+        // Save to Zustand and persist to localStorage/sessionStorage
+        useUserStore.getState().setUser(user);
+        localStorage.setItem('user', JSON.stringify(user)); // Or sessionStorage
+
+        console.log("User logged in:", user);
+
         const path = `/${userMode}/dashboard`;
         navigate(path);
+        } else {
+        console.error('Login failed:', data.error || data);
+        }
+
+    } catch (error) {
+        console.error("Error during admin login:", error);
+    } finally {
+        setLoading(false);
     }
+    };
+
+
+    // Handle student login
+    // This function will be called when the user clicks the "Enter Library" button
+    const handleStudentLogin = async() => {
+        setLoading(true);
+
+        if (!grade || !studentId) {
+            console.error("Grade and Student ID are required for student login.");
+            return;
+        }
+
+        try {
+            const response = await axios.post(
+            `${API_URL}/login/student/`,
+            { grade, student_id: studentId },
+            {
+                withCredentials: true, // Crucial for session-based auth
+                headers: {
+                'Content-Type': 'application/json',
+                },
+            }
+            );
+
+            const data = response.data;
+
+            if (data.user) {
+            const user = {
+                ...data.user,
+                role: 'student',
+            };
+
+            // Save to Zustand and persist to localStorage/sessionStorage
+            useUserStore.getState().setUser(user);
+            localStorage.setItem('user', JSON.stringify(user)); // Or sessionStorage
+
+            console.log("User logged in:", user);
+
+            const path = `/${userMode}/dashboard`;
+            navigate(path);
+            } else {
+            console.error('Login failed:', data.error || data);
+            }
+
+        } catch (error) {
+            console.error("Error during student login:", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+
+
 
     const handleRedirect = (e) => {
         e.preventDefault();
@@ -150,18 +200,26 @@ const Login = () => {
 
                         <div className="input-group">
                             <label htmlFor="grade">Select Grade</label>
-                            <select name="grade">
-                                <option value="">Grade 8</option>
-                                <option value="">Grade 9</option>
-                                <option value="">Grade 10</option>
-                                <option value="">Grade 11</option>
-                                <option value="">Grade 12</option>
+                            <select 
+                             name="grade"
+                             value={grade}
+                             onChange={(e) => setGrade(e.target.value)}
+                            >
+                                <option value="grade-8">Grade 8</option>
+                                <option value="grade-9">Grade 9</option>
+                                <option value="grade-10">Grade 10</option>
+                                <option value="grade-11">Grade 11</option>
+                                <option value="grade-12">Grade 12</option>
                             </select>
                         </div>
 
                         <div className="input-group">
                             <label htmlFor="student-id">Enter Student Number:</label>
-                            <input type="number" name="student-id" />
+                            <input type="number" 
+                            name="student-id" 
+                            value={studentId}
+                            onChange={(e) => setStudentId(e.target.value)}
+                            />
                         </div>
 
                       
