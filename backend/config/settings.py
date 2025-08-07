@@ -108,6 +108,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'api.authentication.EmailBackend',  # Adjust this to match your app's path
+]
+
+AUTH_USER_MODEL = 'api.AdminUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
