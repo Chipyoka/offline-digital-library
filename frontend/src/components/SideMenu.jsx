@@ -1,22 +1,22 @@
-// components/SideMenu.jsx
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useUserStore from '../store/useUserStore';
+import { useState } from 'react';
 
 const navConfig = {
   admin: [
     { path: 'dashboard', label: 'Home' },
-    { path: 'profile', label: 'Assessments' },
+    { path: 'assessments', label: 'Assessments' },
     { path: 'help', label: 'Help Center' },
     { path: 'settings', label: 'Admin Panel' },
   ],
   student: [
     { path: 'dashboard', label: 'Home' },
-    { path: 'profile', label: 'Assessments' },
+    { path: 'assessments', label: 'Assessments' },
     { path: 'help', label: 'Help Center' },
   ],
   guest: [
-    { path: 'home', label: 'Home' },
-    { path: 'about', label: 'Help Center' },
+    { path: 'dashboard', label: 'Home' },
+    { path: 'help', label: 'Help Center' },
   ],
 };
 
@@ -25,19 +25,35 @@ const SideMenu = () => {
   const user = useUserStore((state) => state.user);
   const role = user?.role || 'guest';
   const menuItems = navConfig[role];
+  const navigate = useNavigate();
+
+  const [activePath, setActivePath] = useState(pathname);
+
+  const handleNav = (item) => {
+    // const fullPath = role !== 'guest' ? `/${role}/${item.path}` : `/${item.path}`;
+    const fullPath = `/${role}/${item.path}`;
+    
+    setActivePath(fullPath);
+    if (pathname !== fullPath) {
+      navigate(fullPath);
+    }
+  };
 
   return (
     <aside className="side-menu">
-        <h4 className="my-1">Menu</h4>
+      <h4 className="my-1">Menu</h4>
       <ul>
         {menuItems.map((item) => {
-          // Prepend the role to the path if not guest
           const fullPath = role !== 'guest' ? `/${role}/${item.path}` : `/${item.path}`;
           const isActive = pathname === fullPath;
 
           return (
-            <li key={item.path} className={isActive ? 'active' : ''}>
-              <Link to={fullPath}>{item.label}</Link>
+            <li
+              key={item?.path}
+              className={isActive ? 'active' : ''}
+              onClick={() => handleNav(item)}
+            >
+              {item?.label}
             </li>
           );
         })}
