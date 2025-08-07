@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-zu7-73e^ava9r(9146j^8#$(xa0k6-po@!9u0z+s_y!1j5u$m(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -56,7 +56,12 @@ MIDDLEWARE = [
     
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # your frontend dev server
+    # Add other origins as needed
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'config.urls'
 
@@ -112,7 +117,7 @@ AUTHENTICATION_BACKENDS = [
     'api.authentication.EmailBackend',  # Adjust this to match your app's path
 ]
 
-AUTH_USER_MODEL = 'api.AdminUser'
+# AUTH_USER_MODEL = 'api.AdminUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

@@ -25,9 +25,26 @@ def admin_login(request):
         if user:
             request.session['user_id'] = user.id
             request.session['role'] = 'admin'
-            return Response({'message': 'Admin login successful'}, status=200)
+            
+            # Directly create user data dictionary without serializer
+            user_data = {
+                'id': user.id,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'is_superuser': user.is_superuser,
+                'is_staff': user.is_staff,
+                'username': user.username,
+            }
+            
+            return Response({
+                'message': 'Admin login successful',
+                'user': user_data
+            }, status=200)
+        
         return Response({'error': 'Invalid credentials'}, status=401)
     return Response(serializer.errors, status=400)
+
 
 # Student login endpoint
 @api_view(['POST'])

@@ -4,20 +4,70 @@ import {NavLink, useLocation, useNavigate} from 'react-router-dom';
 
 import useUserStore from '../store/useUserStore';
 
+import axios from 'axios';
 
+// get backend API URL from environment variables
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 const Login = () => {
     const [userMode, setUserMode] = useState('guest');
     const [title, setTitle] = useState('Welcome to the');
     const [desc, setDesc] = useState('Continue as');
 
+    const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState(null);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     const navigate = useNavigate();
 
-    const handleAdminLogin = () => {
+ const handleAdminLogin = async () => {
+  setLoading(true);
 
-        const path = `/${userMode}/dashboard`;
-        navigate(path);
+  if (!email || !password) {
+    console.error("Email and password are required for admin login.");
+    return;
+  }
+
+  try {
+    const response = await axios.post(
+      `${API_URL}/login/admin/`,
+      { email, password },
+      {
+        withCredentials: true, // Crucial for session-based auth
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const data = response.data;
+
+    if (data.user) {
+      const user = {
+        ...data.user,
+        role: 'admin',
+      };
+
+      // Save to Zustand and persist to localStorage/sessionStorage
+      useUserStore.getState().setUser(user);
+      localStorage.setItem('user', JSON.stringify(user)); // Or sessionStorage
+
+      console.log("User logged in:", user);
+
+      const path = `/${userMode}/dashboard`;
+      navigate(path);
+    } else {
+      console.error('Login failed:', data.error || data);
     }
+
+  } catch (error) {
+    console.error("Error during admin login:", error);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
     const handleStudentLogin = () => {
         const path = `/${userMode}/dashboard`;
@@ -47,13 +97,7 @@ const Login = () => {
             }, 2000);
         }
 
-        // Perform authentication (mocked here)
-        const user = {
-            name: 'John Doe',
-            role: userMode, // or 'user'
-            token: 'abc123'
-        };
-        useUserStore.getState().setUser(user);
+      
 
         console.log("User:", user);
     }
@@ -140,12 +184,22 @@ const Login = () => {
 
                         <div className="input-group">
                             <label htmlFor="email">Enter email:</label>
-                            <input type="email" name="student-id" />
+                            <input 
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                type="email" 
+                                name="email" 
+                            />
                         </div>
 
                         <div className="input-group">
                             <label htmlFor="student-id">Enter password:</label>
-                            <input type="password" name="password" />
+                            <input 
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                type="password" 
+                                name="password" 
+                            />
                         </div>
 
                             <button 
