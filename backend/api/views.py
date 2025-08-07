@@ -58,7 +58,20 @@ def student_login(request):
             )
             request.session['user_id'] = student.id
             request.session['role'] = 'student'
-            return Response({'message': 'Student login successful'}, status=200)
+
+            # Directly create user data dictionary without serializer
+            user_data = {
+                'id': student.id,
+                'full_name': student.full_name,
+                'grade': student.grade,
+                'student_id': student.student_id,
+                'created_at': student.created_at,
+            }
+            
+            return Response({
+                'message': 'Student login successful',
+                'user': user_data
+            }, status=200)
         except Student.DoesNotExist:
             return Response({'error': 'Student not found'}, status=404)
     return Response(serializer.errors, status=400)
