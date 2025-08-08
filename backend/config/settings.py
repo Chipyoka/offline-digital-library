@@ -63,6 +63,12 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+# For session cookies to work cross-origin:
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = False  # Required for cross-origin cookies
+CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SECURE = False
+
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [

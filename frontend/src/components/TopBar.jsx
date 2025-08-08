@@ -9,6 +9,11 @@ import useConnectionStore from '../store/connectionStore';
 
 import NotificationCenter from './NotificationCenter';
 
+import axios from 'axios';
+
+// get backend API URL from environment variables
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+
 const TopBar = () => {
   const user = useUserStore((state) => state.user);
   const logout = useUserStore((state) => state.logout);
@@ -42,16 +47,38 @@ const TopBar = () => {
     return `${months || 1} month${months > 1 ? 's' : ''} ago`;
   }
 
-  const handleLogout = () => {
-    setLoading(true);
-    addNotification({ type: 'warning', message: 'Logging Out...' });
+const handleLogout = async () => {
+  setLoading(true);
+  addNotification({ type: 'warning', message: 'Logging Out...' });
+
+  try {
+    const response = await axios.post(
+      `${API_URL}/logout/`,
+      {}, // No body needed for logout
+      {
+        withCredentials: true, // ✅ Correctly placed in config
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    const data = response.data;
+    console.log("Logout response:", data);
 
     setTimeout(() => {
-      logout();
-      navigate('/guest/dashboard');
-      setLoading(false);
+      logout(); // your local logout function
+      navigate('/'); // go to home page
     }, 2000);
-  };
+
+  } catch (error) {
+    console.error("Error during logout:", error);
+    addNotification({ type: 'error', message: 'Logout Failed' });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const tryConnect = async () => {
     setLoading(true);

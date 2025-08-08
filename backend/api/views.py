@@ -67,7 +67,7 @@ def student_login(request):
                 'student_id': student.student_id,
                 'created_at': student.created_at,
             }
-            
+
             return Response({
                 'message': 'Student login successful',
                 'user': user_data
@@ -87,7 +87,8 @@ def guest_login(request):
 
 @api_view(['POST'])
 def logout_user(request):
-    if request.session.exists(request.session.session_key):
-        request.session.flush()  # Clear all session data
-        return Response({'message': 'Successfully logged out'}, status=200)
-    return Response({'error': 'No active session found'}, status=400)
+    if 'role' in request.session:
+        role = request.session['role']
+        request.session.flush()
+        return Response({'message': f'Successfully logged out {role}'}, status=200)
+    return Response({'message': 'No active session found'}, status=200)

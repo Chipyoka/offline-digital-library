@@ -3,6 +3,9 @@ import {useState} from 'react';
 import {NavLink, useLocation, useNavigate} from 'react-router-dom';
 
 import useUserStore from '../store/useUserStore';
+import useNotificationStore from '../store/notificationStore';
+
+import NotificationCenter from '../components/NotificationCenter';
 
 import axios from 'axios';
 
@@ -10,6 +13,8 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 const Login = () => {
+      const addNotification = useNotificationStore((state) => state.addNotification);
+
     const [userMode, setUserMode] = useState('guest');
     const [title, setTitle] = useState('Welcome to the');
     const [desc, setDesc] = useState('Continue as');
@@ -29,6 +34,9 @@ const Login = () => {
 
     if (!email || !password) {
         console.error("Email and password are required for admin login.");
+        addNotification({ type: 'error', message: 'All fields are required' });
+         setLoading(false);
+         
         return;
     }
 
@@ -57,15 +65,24 @@ const Login = () => {
         localStorage.setItem('user', JSON.stringify(user)); // Or sessionStorage
 
         console.log("User logged in:", user);
+        addNotification({ type: 'success', message: 'Login successful' });
 
         const path = `/${userMode}/dashboard`;
         navigate(path);
         } else {
         console.error('Login failed:', data.error || data);
+        addNotification({ type: 'error', message: 'Login failed' });
         }
 
     } catch (error) {
         console.error("Error during admin login:", error);
+        addNotification({ type: 'error', message: 'Login Failed' });
+        // check if error is 401
+        if (error.response && error.response.status === 401) {
+            addNotification({ type: 'error', message: 'Invalid email or password' });
+        }else {
+            addNotification({ type: 'error', message: 'Something went wrong' });
+        }
     } finally {
         setLoading(false);
     }
@@ -79,6 +96,8 @@ const Login = () => {
 
         if (!grade || !studentId) {
             console.error("Grade and Student ID are required for student login.");
+            addNotification({ type: 'error', message: 'All fields are required' });
+            setLoading(false);
             return;
         }
 
@@ -107,15 +126,68 @@ const Login = () => {
             localStorage.setItem('user', JSON.stringify(user)); // Or sessionStorage
 
             console.log("User logged in:", user);
+            addNotification({ type: 'success', message: 'Login successful' });
 
             const path = `/${userMode}/dashboard`;
             navigate(path);
             } else {
             console.error('Login failed:', data.error || data);
+            addNotification({ type: 'error', message: 'Login failed' });
             }
 
         } catch (error) {
             console.error("Error during student login:", error);
+            // check if error is 404
+            if (error.response && error.response.status === 404) {
+                addNotification({ type: 'error', message: 'Student not found' });
+            }else {
+                addNotification({ type: 'error', message: 'Something went wrong' });
+            }
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // Handle guest login
+    // This function will be called when the user clicks the "Enter Library" button
+    const handleGuestLogin = async() => {
+        setLoading(true);
+
+        try {
+            const response = await axios.post(
+            `${API_URL}/login/guest/`,
+            {
+                withCredentials: true, // Crucial for session-based auth
+                headers: {
+                'Content-Type': 'application/json',
+                },
+            }
+            );
+
+            const data = response.data;
+
+            if (data) {
+            const user = {
+                ...data,
+                role: 'guest',
+            };
+
+            // Save to Zustand and persist to localStorage/sessionStorage
+            useUserStore.getState().setUser(user);
+            localStorage.setItem('user', JSON.stringify(user)); // Or sessionStorage
+
+            console.log("User logged in:", user);
+
+            const path = `/${userMode}/dashboard`;
+            navigate(path);
+            } else {
+            console.error('Login failed:', data.error || data);
+            addNotification({ type: 'error', message: 'Login failed' });
+            }
+
+        } catch (error) {
+            console.error("Error during guest login:", error);
+            addNotification({ type: 'error', message: 'Login Failed' });
         } finally {
             setLoading(false);
         }
@@ -131,20 +203,19 @@ const Login = () => {
             console.log ("Student login detected");
             setTimeout(() => {    
                 handleStudentLogin();
-            }, 2000);
+            }, 200);
 
         }else if(userMode == 'admin'){
             console.log ("Admin login detected");
             setTimeout(() => {    
                 handleAdminLogin();
-            }, 2000);
+            }, 200);
         }else{
             console.log ("Guest mode initiated");
             
             setTimeout(() => {    
-                const path = `/guest/dashboard`;
-                navigate(path);
-            }, 2000);
+                handleGuestLogin();
+            }, 200);
         }
 
       
@@ -161,6 +232,7 @@ const Login = () => {
         <div className="login-box">
             <div className="topbar container">
                 <img src={Logo} alt="Zambia digitial library" height="48px"/>
+                  <NotificationCenter />
             </div>
            <div className="container">
              <main>
@@ -224,7 +296,7 @@ const Login = () => {
 
                       
                             <button onClick={handleRedirect} className="primary-btn-lg">
-                                Enter Library
+                                {loading ? 'Loading...' : 'Enter Library'}
                             </button>
                         
 
@@ -264,7 +336,7 @@ const Login = () => {
                                 type="button"
                                 onClick={handleRedirect} 
                                 className="primary-btn-lg">
-                                Login as admin
+                                {loading ? 'Loading...' : 'Login as Admin'}
                             </button>
 
                         <h4 onClick={handleReset} className="hyperlink">Return to home</h4>
